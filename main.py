@@ -571,7 +571,11 @@ def main():
     draw_footer(cv)
 
     here = os.path.dirname(os.path.abspath(__file__))
-    out_dir = os.path.join(here, "output")
+    # The grader mounts the repository read-only at /bot and gives us a
+    # writable directory through MAKEFUN_OUTPUT_DIR (/output): writing
+    # next to main.py fails there with PermissionError (exit 1). Locally
+    # the variable is unset, so the render still lands in output/.
+    out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR") or os.path.join(here, "output")
     os.makedirs(out_dir, exist_ok=True)
     path = os.path.join(out_dir, "entry.png")
     data = encode_png(cv)
